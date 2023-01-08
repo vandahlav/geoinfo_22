@@ -132,16 +132,22 @@ def plot(results):
         x.append(r[0])
         y.append(r[1])
     ax = plt.axes()
+    ax.invert_xaxis()
+    ax.invert_yaxis()
     ax.scatter(x, y)
     ax.plot(x, y)
     plt.show()
 
 #get data from file
 def load_data(input):
-    with open(input) as inp:
-        data = pd.read_csv(inp, sep=";")
-        nodes = data[["coord_X", "coord_Y"]].values.tolist()
-    return nodes
+    try:
+        with open(input) as inp:
+            data = pd.read_csv(inp, sep=";")
+            nodes = data[["coord_X", "coord_Y"]].values.tolist()
+        return nodes
+    except FileNotFoundError:
+        print("Couldn't access the file, make sure the path is correct or exists.")
+        quit()
 
 #input data
 input_file = "ČR_obce_10_tis.csv"

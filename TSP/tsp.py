@@ -155,11 +155,11 @@ node = load_data(input_file)
 #execute algorithms separately
 h_cycle_nn, W_nn = nearest_neighbor(node)
 print(f"Výsledek NN: W = {W_nn}")
-#plot(h_cycle_nn)
+plot(h_cycle_nn)
 
 h_cycle_bi, W_bi = best_insertion(node)
 print(f"Výsledek BI: W = {W_bi}")
-#plot(h_cycle_bi)
+plot(h_cycle_bi)
 
 #repeat each function for chosen amout times
 def tsp(node, repetition = 10):

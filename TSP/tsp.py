@@ -9,7 +9,6 @@ def distance(n1, n2):
     return sqrt((n1[0] - n2[0])**2 + (n1[1] - n2[1])**2)
 
 def nearest_neighbor(node, u = 0):
-    print("Jupí, funguju! Pracuju na NN.")
     #set all nodes as unprocessed, create a cycle and initialize it's weigh
     state_of_nodes = ["N"] * (len(node))
     h_cycle = []
@@ -63,7 +62,7 @@ def nearest_neighbor(node, u = 0):
 
 def best_insertion(node : list):
     #declare imput data as a list
-    print("Dělám na BI, klid.")
+
     #set all nodes as unprocessed, copy data, create a cycle and initialize it's weigh
     state_of_nodes = ["N"] * (len(node))
     copy_node = node.copy()
@@ -148,16 +147,27 @@ def load_data(input):
     except FileNotFoundError:
         print("Couldn't access the file, make sure the path is correct or exists.")
         quit()
-
+    
 #input data
-input_file = "ČR_obce_10_tis.csv"
+input_file = "pokus.csv"
 node = load_data(input_file)
 
 #execute algorithms separately
 h_cycle_nn, W_nn = nearest_neighbor(node)
-print(f"Výsledek NN: W = ", W_nn)
-plot(h_cycle_nn)
+print(f"Výsledek NN: W = {W_nn}")
+#plot(h_cycle_nn)
 
 h_cycle_bi, W_bi = best_insertion(node)
-print(f"Výsledek BI: W = ", W_bi)
-plot(h_cycle_bi)
+print(f"Výsledek BI: W = {W_bi}")
+#plot(h_cycle_bi)
+
+#repeat each function for chosen amout times
+def tsp(node, repetition = 10):
+    
+    for _ in range(repetition):
+        NN_results = nearest_neighbor(node)
+        BI_results = best_insertion(node)
+
+    return NN_results, BI_results
+       
+travelling_salesman_problem = tsp(node, repetition = 10)

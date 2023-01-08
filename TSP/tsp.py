@@ -8,7 +8,7 @@ import pandas as pd
 def distance(n1, n2):
     return sqrt((n1[0] - n2[0])**2 + (n1[1] - n2[1])**2)
 
-def nearest_neighbor(node, u = 0):
+def nearest_neighbor(node : list, u = 0):
     #set all nodes as unprocessed, create a cycle and initialize it's weigh
     state_of_nodes = ["N"] * (len(node))
     h_cycle = []
@@ -50,13 +50,13 @@ def nearest_neighbor(node, u = 0):
         start_i = next_n
         state_of_nodes[start] = "D"
 
-        W += min_distance
+        W = W + min_distance
 
     #closing the cycle; calculate distance between starting and last point
     end_distance = distance(start_i, node[0])
     
     h_cycle.append(node[0])
-    W += end_distance
+    W = W + end_distance
 
     return h_cycle, W
 
@@ -65,7 +65,6 @@ def best_insertion(node : list):
 
     #set all nodes as unprocessed, copy data, create a cycle and initialize it's weigh
     state_of_nodes = ["N"] * (len(node))
-    copy_node = node.copy()
     h_cycle = []
     W = 0
 
@@ -89,11 +88,11 @@ def best_insertion(node : list):
         min_distance = inf
 
         #select random node
-        random_idx= random.choice([idx for idx in range(len(node)) if state_of_nodes[idx] == "N"])
+        random_idx= random.choice([idx for idx in range(len(node))])
         random_node = node[random_idx]
 
-        #iterate over nodes except starting node
-        for index in range(len(h_cycle) - 2):
+        #iterate over nodes from cycle
+        for index in range(len(h_cycle)):
 
             #index for next node
             if index != len(h_cycle) - 1:
@@ -110,7 +109,6 @@ def best_insertion(node : list):
         
         #add node to cycle, remove node from copy_node list and calculate W
         h_cycle.insert(node_idx, random_node)
-        copy_node.remove(random_node)
         W += min_distance
 
         #change status of current node
@@ -133,8 +131,11 @@ def plot(results):
     ax = plt.axes()
     ax.invert_xaxis()
     ax.invert_yaxis()
-    ax.scatter(x, y)
-    ax.plot(x, y)
+
+    #plot and change colors
+    ax.scatter(x, y, c = "cornflowerblue")
+    ax.plot(x, y, c = "thistle")
+    
     plt.show()
 
 #get data from file
@@ -155,20 +156,43 @@ node = load_data(input_file)
 
 #execute algorithms separately
 h_cycle_nn, W_nn = nearest_neighbor(node)
-print(f"Results for NN: W = {W_nn}!")
+print(f"Results for NN: W = {W_nn}")
 plot(h_cycle_nn)
 
 h_cycle_bi, W_bi = best_insertion(node)
-print(f"Results for BI: W = {W_bi}!")
+print(f"Results for BI: W = {W_bi}")
 plot(h_cycle_bi)
 
+"""
 #repeat each function for chosen amout times
-def tsp(node, repetition = 10):
-    
-    for _ in range(repetition):
-        NN_results = nearest_neighbor(node)
-        BI_results = best_insertion(node)
+def tsp(node, repetition : int = 10):
 
-    return NN_results, BI_results
+    min_h_cycleNN = []
+    min_WNN = []
+    min_h_cycleBI = []
+    min_WBI = []
+    
+    for j in range(repetition):
+        NN_results, NN_W = nearest_neighbor(node)
+        min_h_cycleNN.append(NN_results)
+        min_WNN.append(NN_W)
+    
+    min_W_NN = min(min_WNN)
+    indexNN = min_WNN.index(min_W_NN)
+    best_h_cycleNN = min_h_cycleNN[indexNN]
+    plot(best_h_cycleNN)
+
+    for i in range(repetition):
+        BI_results, BI_W = best_insertion(node)
+        min_h_cycleBI.append(BI_results)
+        min_WBI.append(BI_W)
+
+    min_W_BI = min(min_WBI)
+    indexBI = min_WBI.index(min_W_BI)
+    best_h_cycleBI = min_h_cycleBI[indexBI]
+    plot(best_h_cycleBI)
+
+    return best_h_cycleNN, best_h_cycleBI
        
-travelling_salesman_problem = tsp(node, repetition = 10)
+travelling_salesman_problem_NN, travelling_salesman_problem_BI = tsp(node, repetition = 10)
+"""
